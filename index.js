@@ -9,7 +9,7 @@ const Users = require('./model/users')
 const Product = require('./model/product')
 require('dotenv').config();
 const PORT = process.env.PORT || 5000
-const atlasConnectionUri = process.env.MONGODB_URL;
+const atlasConnectionUri = process.env.MONGODB_URI;
 app.use(express.json());
 app.use(cors());
 
