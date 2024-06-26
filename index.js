@@ -1,43 +1,55 @@
+require('dotenv').config();
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const multer = require('multer');
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const path = require('path');
 const cors = require('cors');
 const Users = require('./model/users')
 const Product = require('./model/product')
-require('dotenv').config();
-const PORT = process.env.PORT || 5000
+const PORT = process.env.PORT || 5000;
 const atlasConnectionUri = process.env.MONGODB_URI;
+
 app.use(express.json());
 app.use(cors());
 
-//Image storage engine
-const storage = multer.diskStorage({
-    destination: './upload/images',
-    filename: (req, file, cb) => {
-        return cb(null, `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`)
-    }
-})
+
+// Configure Cloudinary
+const cloudinary = require('cloudinary').v2;
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
+});
+
+// Multer storage engine for Cloudinary
+const storage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: {
+        folder: 'upload/images', // Optional - specify the folder where Cloudinary should store the images
+        format: async (req, file) => 'png', // supports promises as well
+        public_id: (req, file) => `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`,
+    },
+});
 
 const upload = multer({ storage: storage });
 
-//creating upload endpoint for images
-app.use('/images', express.static('upload/images'))
+// Serve static images from Cloudinary
+app.use('/images', express.static('upload/images'));
 
+// Route for uploading images
+app.post("/upload", upload.single('product'), (req, res) => {
+    res.json({
+        success: true,
+        image_url: req.file.path // Cloudinary stores the URL in req.file.path
+    });
+});
 
 //API creation
 app.get("/", (req, res) => {
     res.send("Express app is running");
-})
-
-
-app.post("/upload", upload.single('product'), (req, res) => {
-    res.json({
-        success: 1,
-        image_url: `http://localhost:${port}/images/${req.file.filename}`
-    })
 })
 
 //API for adding products
@@ -238,7 +250,7 @@ app.post("/getcart", fetchUser, async (req, res) => {
 
 
 //Database connection with mongoDB
-mongoose.connect(atlasConnectionUri).then(()=>{
+mongoose.connect(atlasConnectionUri).then(() => {
     app.listen(PORT, (error) => {
 
         if (!error) {
@@ -248,6 +260,6 @@ mongoose.connect(atlasConnectionUri).then(()=>{
         }
     })
 })
-.catch((err)=> {
-    console.log("Error connecting to database");
-})
+    .catch((err) => {
+        console.log("Error connecting to database");
+    })
