@@ -21,6 +21,14 @@ app.use(cors({
     credentials: true
 }));
 
+//CORS Preflight handling
+app.options('*', cors({
+    origin: ['https://trend-mart-frontend.vercel.app', 'https://trend-mart-admin.vercel.app'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
+}));
+
 // Configure Cloudinary
 const cloudinary = require('cloudinary').v2;
 cloudinary.config({
