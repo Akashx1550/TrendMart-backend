@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 const multer = require('multer');
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const path = require('path');
-//const cors = require('cors');
+const cors = require('cors');
 const Users = require('./model/users')
 const Product = require('./model/product')
 const PORT = process.env.PORT || 5000;
@@ -14,20 +14,20 @@ const atlasConnectionUri = process.env.MONGODB_URI;
 
 app.use(express.json());
 
-// app.use(cors({
-//     origin: ['https://trend-mart-frontend.vercel.app', 'https://trend-mart-admin.vercel.app'],
-//     methods: ['GET', 'POST', 'PUT', 'DELETE'],
-//     allowedHeaders: ['Content-Type', 'Authorization'],
-//     credentials: true
-// }));
+app.use(cors({
+    origin: ['https://trend-mart-frontend.vercel.app/', 'https://trend-mart-admin.vercel.app/'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
+}));
 
-// //CORS Preflight handling
-// app.options('*', cors({
-//     origin: ['https://trend-mart-frontend.vercel.app', 'https://trend-mart-admin.vercel.app'],
-//     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-//     allowedHeaders: ['Content-Type', 'Authorization'],
-//     credentials: true
-// }));
+//CORS Preflight handling
+app.options('*', cors({
+    origin: ['https://trend-mart-frontend.vercel.app/', 'https://trend-mart-admin.vercel.app/'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
+}));
 
 // Configure Cloudinary
 const cloudinary = require('cloudinary').v2;
