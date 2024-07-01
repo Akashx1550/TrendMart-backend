@@ -15,11 +15,13 @@ const atlasConnectionUri = process.env.MONGODB_URI;
 app.use(express.json());
 
 app.use(cors({
-    origin: ['https://trend-mart-frontend.vercel.app', 'https://trend-mart-admin.vercel.app'],
+    origin: ['https://trend-mart-frontend.vercel.app/', 'https://trend-mart-admin.vercel.app/'],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
 }));
+
+
 
 // Configure Cloudinary
 const cloudinary = require('cloudinary').v2;
