@@ -17,7 +17,6 @@ app.use(express.json());
 app.use(cors({
     origin: ['https://trend-mart-frontend.vercel.app/*', 'https://trend-mart-admin.vercel.app/*', 'https://trendmart-backend.onrender.com/allproducts'],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
 }));
 
