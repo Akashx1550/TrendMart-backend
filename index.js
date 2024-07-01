@@ -15,7 +15,7 @@ const atlasConnectionUri = process.env.MONGODB_URI;
 app.use(express.json());
 
 app.use(cors({
-    origin: ['*'],
+    origin: ['https://trend-mart-frontend.vercel.app', 'https://trend-mart-admin.vercel.app'],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
@@ -34,7 +34,6 @@ const storage = new CloudinaryStorage({
     cloudinary: cloudinary,
     params: {
         folder: 'upload/images', // Optional - specify the folder where Cloudinary should store the images
-        format: async (req, file) => 'png', // supports promises as well
         public_id: (req, file) => `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`,
     },
 });
